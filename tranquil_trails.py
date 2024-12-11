@@ -4,9 +4,9 @@ import cv2
 import numpy as np
 
 # Load YOLO models
-paddy_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best1.pt")
-chili_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best2.pt")
-onion_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best3.pt")
+paddy_model = YOLO("best1.pt")
+chili_model = YOLO("best2.pt")
+onion_model = YOLO("best3.pt")
 
 # Streamlit page configuration
 st.set_page_config(
