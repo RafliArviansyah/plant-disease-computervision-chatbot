@@ -1,0 +1,88 @@
+import streamlit as st
+from ultralytics import YOLO
+import cv2
+import numpy as np
+
+# Load YOLO models
+paddy_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best1.pt")
+chili_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best2.pt")
+onion_model = YOLO("C:\\Users\\Nitro\\Msib-OFA\\Computer Vision_Streamlit_project\\best3.pt")
+
+# Streamlit page configuration
+st.set_page_config(
+    page_title="Tranquil Trails - Deteksi Objek",
+    page_icon="🌾",
+    layout="wide"
+)
+
+# Sidebar Navigation
+st.sidebar.title("Tranquil Trails")
+st.sidebar.header("Pilih Model")
+model_choice = st.sidebar.radio(
+    "Pilih jenis tanaman yang ingin dideteksi:",
+    ("Paddy", "Chili", "Onion")
+)
+
+# Map pilihan ke model
+if model_choice == "Paddy":
+    selected_model = paddy_model
+elif model_choice == "Chili":
+    selected_model = chili_model
+else:
+    selected_model = onion_model
+
+# Main content layout
+st.title("🌾 Deteksi Objek untuk Tanaman")
+st.markdown(
+    """
+    <p style="font-size: 16px; text-align: center;">
+        Pilih model deteksi di menu sebelah kiri, unggah gambar, dan lihat hasil deteksi.
+    </p>
+    """,
+    unsafe_allow_html=True
+)
+
+# Check if a model is selected
+st.markdown(f"### 🌱 Model Terpilih: **{model_choice}**")
+
+# Upload and process image
+uploaded_file = st.file_uploader(
+    f"Unggah gambar {model_choice} untuk memulai deteksi:",
+    type=["jpg", "jpeg", "png"]
+)
+
+if uploaded_file is not None:
+    # Convert uploaded file to OpenCV format
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    
+    # Display uploaded image
+    st.image(img, channels="BGR", caption="📷 Gambar yang diunggah", use_column_width=True)
+    
+    # Run selected YOLO model on the image
+    st.markdown("### 🔄 Memproses gambar dengan model yang dipilih...")
+    results = selected_model(img)
+    
+    # Display results
+    st.markdown("### ✅ Hasil Deteksi")
+    annotated_image = results[0].plot()
+    st.image(annotated_image, caption="🔍 Deteksi Objek", use_column_width=True)
+else:
+    st.markdown(
+        """
+        <div style="border: 2px dashed #228B22; padding: 20px; text-align: center; border-radius: 10px;">
+            <h3 style="color: #228B22;">Menunggu gambar diunggah</h3>
+            <p style="color: #555;">Pilih dan unggah gambar untuk mendeteksi objek</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Footer
+st.markdown(
+    """
+    <hr>
+    <p style="text-align: center; color: #777;">Dibuat dengan ❤️ untuk mendukung petani Indonesia</p>
+    """,
+    unsafe_allow_html=True
+)
