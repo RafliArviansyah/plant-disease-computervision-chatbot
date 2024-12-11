@@ -1,5 +1,5 @@
 git add requirements.txt
-git commit -m "Add requirements.txt"
+git commit -m "requirements.txt"
 git push
 altair==5.4.1
 annotated-types==0.7.0
