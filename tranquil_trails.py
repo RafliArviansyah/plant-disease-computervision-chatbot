@@ -20,13 +20,13 @@ st.sidebar.title("Tranquil Trails")
 st.sidebar.header("Pilih Model")
 model_choice = st.sidebar.radio(
     "Pilih jenis tanaman yang ingin dideteksi:",
-    ("Paddy", "Chili", "Onion")
+    ("Padi", "Cabai", "Bawang")
 )
 
 # Map pilihan ke model
-if model_choice == "Paddy":
+if model_choice == "Padi":
     selected_model = paddy_model
-elif model_choice == "Chili":
+elif model_choice == "Ca":
     selected_model = chili_model
 else:
     selected_model = onion_model
