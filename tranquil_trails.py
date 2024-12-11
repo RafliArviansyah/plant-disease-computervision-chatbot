@@ -15,9 +15,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Display logo on the main page
-st.image("plants.png", width=200)
-
 # Custom CSS for green leaf background
 st.markdown(
     """
@@ -38,7 +35,6 @@ st.markdown(
 )
 
 # Sidebar Navigation
-st.sidebar.image("plants.png", use_column_width=True)  # Logo in sidebar
 st.sidebar.title("Tranquil Trails")
 st.sidebar.header("Pilih Fitur")
 feature_choice = st.sidebar.radio(
