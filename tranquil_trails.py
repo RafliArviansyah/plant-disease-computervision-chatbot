@@ -105,9 +105,9 @@ if feature_choice == "Deteksi Tanaman":
             unsafe_allow_html=True
         )
 
-elif feature_choice == "Tanidoc":
+elif feature_choice == "Chatbot":
     # Chatbot Interface
-    st.title("🤖 Tani Doc")
+    st.title("🤖 Chatbot")
     st.markdown("Ajukan pertanyaan terkait pertanian atau penggunaan aplikasi ini.")
 
     # Input teks dari pengguna
