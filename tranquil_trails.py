@@ -15,6 +15,24 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #228B22; /* Hijau daun */
+            color: white; /* Teks menjadi putih */
+        }
+        [data-testid="stSidebar"] {
+            background-color: #2E8B57; /* Hijau yang lebih gelap untuk sidebar */
+        }
+        .css-1v3fvcr {
+            border: 2px dashed white !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Sidebar Navigation
 st.sidebar.title("Tranquil Trails")
 st.sidebar.header("Pilih Model")
@@ -26,7 +44,7 @@ model_choice = st.sidebar.radio(
 # Map pilihan ke model
 if model_choice == "Padi":
     selected_model = paddy_model
-elif model_choice == "Ca":
+elif model_choice == "Cabai":
     selected_model = chili_model
 else:
     selected_model = onion_model
