@@ -1,5 +1,6 @@
 import streamlit as st
 from ultralytics import YOLO
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import cv2
 import numpy as np
 
@@ -10,7 +11,7 @@ onion_model = YOLO("best3.pt")
 
 # Streamlit page configuration
 st.set_page_config(
-    page_title="Tranquil Trails - Deteksi Objek",
+    page_title="Tranquil Trails - Deteksi Objek dan Chatbot",
     page_icon="🌾",
     layout="wide"
 )
@@ -24,7 +25,7 @@ st.markdown(
             color: white; /* Teks menjadi putih */
         }
         [data-testid="stSidebar"] {
-            background-color: #2E8B57; /* Hijau yang lebih gelap untuk sidebar */
+            background-color: #2E8B57; /* Hijau gelap untuk sidebar */
         }
         .css-1v3fvcr {
             border: 2px dashed white !important;
@@ -33,6 +34,21 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# Load GPT-2 model and tokenizer
+@st.cache_resource
+def load_gpt2_model():
+    model = GPT2LMHeadModel.from_pretrained("gpt2")
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    return model, tokenizer
+
+gpt2_model, gpt2_tokenizer = load_gpt2_model()
+
+def generate_gpt2_response(question, model, tokenizer):
+    inputs = tokenizer.encode(question, return_tensors="pt")
+    outputs = model.generate(inputs, max_length=150, num_return_sequences=1, do_sample=True, top_k=50, top_p=0.95)
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response
 
 # Sidebar Navigation
 st.sidebar.title("Tranquil Trails")
@@ -107,23 +123,27 @@ if feature_choice == "Deteksi Tanaman":
 
 elif feature_choice == "Chatbot":
     # Chatbot Interface
-    st.title("🤖 Chatbot")
-    st.markdown("Ajukan pertanyaan terkait pertanian atau penggunaan aplikasi ini.")
+    st.title("🤖 Chatbot AI")
+    st.markdown(
+        """
+        <p style="font-size: 16px; text-align: center;">
+            Ajukan pertanyaan terkait pertanian atau penggunaan aplikasi ini.
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Input teks dari pengguna
-    user_input = st.text_input("Ketik pesan Anda:", "")
+    user_input = st.text_input("Ketik pertanyaan Anda di bawah ini:")
 
-    if user_input:
-        # Logika respons chatbot sederhana (dapat diganti dengan model chatbot atau API lain)
-        if "halo" in user_input.lower():
-            response = "Halo! Bagaimana saya dapat membantu Anda hari ini?"
-        elif "tanaman" in user_input.lower():
-            response = "Saya dapat membantu mendeteksi padi, cabai, dan bawang. Apa yang ingin Anda ketahui lebih lanjut?"
+    if st.button("Kirim"):
+        if user_input.strip():
+            with st.spinner("Sedang membuat respons..."):
+                response = generate_gpt2_response(user_input, gpt2_model, gpt2_tokenizer)
+            st.success("Chatbot AI Menjawab:")
+            st.write(response)
         else:
-            response = "Maaf, saya tidak memahami pertanyaan Anda. Bisa Anda jelaskan lebih detail?"
-
-        # Tampilkan respons chatbot
-        st.markdown(f"**Chatbot:** {response}")
+            st.warning("Silakan masukkan pertanyaan terlebih dahulu.")
 
 # Footer
 st.markdown(
