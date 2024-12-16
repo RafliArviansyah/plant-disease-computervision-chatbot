@@ -1,1 +1,6 @@
+streamlit
 ultralytics
+transformers
+opencv-python
+torch
+numpy
